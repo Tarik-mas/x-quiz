@@ -9,8 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { Users, GraduationCap, Settings } from "lucide-react";
 
 const Index = () => {
-  const [currentView, setCurrentView] = useState<"role-select" | "dashboard" | "forms" | "quizzes">("role-select");
+  const [currentView, setCurrentView] = useState<"role-select" | "dashboard" | "form-builder" | "quiz-builder">("role-select");
   const [userRole, setUserRole] = useState<"teacher" | "student" | "admin">("teacher");
+
+  const handleNavigate = (view: "dashboard" | "quiz-builder" | "form-builder") => {
+    setCurrentView(view);
+  };
 
   if (currentView === "role-select") {
     return (
@@ -108,13 +112,13 @@ const Index = () => {
   const renderContent = () => {
     switch (currentView) {
       case "dashboard":
-        return <Dashboard userRole={userRole} />;
-      case "forms":
+        return <Dashboard userRole={userRole} onNavigate={handleNavigate} />;
+      case "form-builder":
         return <FormBuilder />;
-      case "quizzes":
+      case "quiz-builder":
         return <QuizBuilder />;
       default:
-        return <Dashboard userRole={userRole} />;
+        return <Dashboard userRole={userRole} onNavigate={handleNavigate} />;
     }
   };
 
@@ -130,14 +134,14 @@ const Index = () => {
         {userRole === "teacher" && (
           <>
             <Button
-              variant={currentView === "forms" ? "default" : "ghost"}
-              onClick={() => setCurrentView("forms")}
+              variant={currentView === "form-builder" ? "default" : "ghost"}
+              onClick={() => setCurrentView("form-builder")}
             >
               Form Builder
             </Button>
             <Button
-              variant={currentView === "quizzes" ? "default" : "ghost"}
-              onClick={() => setCurrentView("quizzes")}
+              variant={currentView === "quiz-builder" ? "default" : "ghost"}
+              onClick={() => setCurrentView("quiz-builder")}
             >
               Quiz Builder
             </Button>

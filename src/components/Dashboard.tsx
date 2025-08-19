@@ -18,9 +18,10 @@ import {
 
 interface DashboardProps {
   userRole: "teacher" | "student" | "admin";
+  onNavigate: (view: "dashboard" | "quiz-builder" | "form-builder") => void;
 }
 
-const Dashboard = ({ userRole }: DashboardProps) => {
+const Dashboard = ({ userRole, onNavigate }: DashboardProps) => {
   const teacherStats = [
     { title: "Active Forms", value: "12", change: "+3", icon: FileText, color: "primary" },
     { title: "Quiz Templates", value: "8", change: "+2", icon: ClipboardList, color: "secondary" },
@@ -76,11 +77,17 @@ const Dashboard = ({ userRole }: DashboardProps) => {
           <div className="flex gap-2">
             {userRole === "teacher" && (
               <>
-                <Button className="bg-primary hover:bg-primary/90 shadow-glow">
+                <Button 
+                  className="bg-primary hover:bg-primary/90 shadow-glow"
+                  onClick={() => onNavigate("form-builder")}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   New Form
                 </Button>
-                <Button variant="outline">
+                <Button 
+                  variant="outline"
+                  onClick={() => onNavigate("quiz-builder")}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   New Quiz
                 </Button>
@@ -135,12 +142,20 @@ const Dashboard = ({ userRole }: DashboardProps) => {
           <CardContent className="space-y-3">
             {userRole === "teacher" && (
               <>
-                <Button variant="outline" className="w-full justify-start gap-2 h-12">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-2 h-12"
+                  onClick={() => onNavigate("form-builder")}
+                >
                   <FileText className="w-4 h-4" />
                   Create Smart Form
                   <Badge className="ml-auto bg-accent text-accent-foreground">AI Enhanced</Badge>
                 </Button>
-                <Button variant="outline" className="w-full justify-start gap-2 h-12">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-2 h-12"
+                  onClick={() => onNavigate("quiz-builder")}
+                >
                   <ClipboardList className="w-4 h-4" />
                   Build Adaptive Quiz
                   <Badge className="ml-auto bg-primary text-primary-foreground">New</Badge>
