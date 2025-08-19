@@ -124,13 +124,22 @@ const QuizBuilder = () => {
               <Button
                 key={questionType.type}
                 variant="outline"
-                className="w-full justify-start gap-2 h-10"
-                onClick={() => addQuestion(questionType.type as QuizQuestion["type"])}
+                className="w-full justify-start gap-2 h-12 text-left hover:bg-primary/10 hover:border-primary/30 transition-all"
+                onClick={() => {
+                  console.log('Adding question type:', questionType.type);
+                  addQuestion(questionType.type as QuizQuestion["type"]);
+                }}
               >
+                <Plus className="w-4 h-4 text-primary" />
                 <questionType.icon className="w-4 h-4" />
-                {questionType.label}
+                <span className="flex-1">{questionType.label}</span>
               </Button>
             ))}
+            <div className="mt-4 p-3 bg-muted/30 rounded-lg border border-dashed border-muted-foreground/30">
+              <p className="text-xs text-muted-foreground text-center">
+                Click any button above to add a new question
+              </p>
+            </div>
           </CardContent>
         </Card>
 
