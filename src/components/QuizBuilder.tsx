@@ -13,15 +13,12 @@ import {
   Trash2, 
   Eye, 
   Save, 
-  Sparkles, 
   Settings,
   GripVertical,
   HelpCircle,
   CheckCircle,
   Code,
-  Timer,
-  Brain,
-  BarChart3
+  Brain
 } from "lucide-react";
 
 interface QuizQuestion {
@@ -76,11 +73,6 @@ const QuizBuilder = () => {
     if (selectedQuestion === id) setSelectedQuestion(null);
   };
 
-  const aiQuestions = [
-    { type: "multiple-choice", question: "What is the capital of France?", difficulty: "easy" },
-    { type: "short-answer", question: "Explain the concept of photosynthesis", difficulty: "medium" },
-    { type: "coding", question: "Write a function to reverse a string", difficulty: "hard" },
-  ];
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -293,82 +285,8 @@ const QuizBuilder = () => {
           </Card>
         </div>
 
-        {/* AI Suggestions & Question Editor */}
+        {/* Question Editor */}
         <div className="space-y-4">
-          {/* AI Question Generator */}
-          <Card className="shadow-card bg-gradient-to-b from-accent/5 to-primary/5 border-accent/20">
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-accent" />
-                AI Question Generator
-              </CardTitle>
-              <CardDescription>Auto-generate questions (Mock)</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {aiQuestions.map((suggestion, index) => (
-                <div key={index} className="p-3 rounded-lg bg-background border border-border">
-                  <div className="flex items-center justify-between mb-2">
-                    <Badge variant="secondary" className="text-xs">
-                      {suggestion.type.replace('-', ' ')}
-                    </Badge>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => addQuestion(suggestion.type as QuizQuestion["type"])}
-                    >
-                      <Plus className="w-3 h-3" />
-                    </Button>
-                  </div>
-                  <p className="text-xs text-foreground">{suggestion.question}</p>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className={`text-xs ${getDifficultyColor(suggestion.difficulty)}`}>
-                      {suggestion.difficulty}
-                    </span>
-                  </div>
-                </div>
-              ))}
-              <Button variant="outline" className="w-full" size="sm">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Generate More
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Quiz Analytics Preview */}
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="text-sm flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
-                Quiz Analytics Preview
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="space-y-2">
-                <div className="flex justify-between text-xs">
-                  <span>Difficulty Distribution</span>
-                </div>
-                <div className="flex gap-1 h-2 rounded-full overflow-hidden bg-muted">
-                  <div className="bg-success flex-1" style={{ width: '40%' }} />
-                  <div className="bg-warning flex-1" style={{ width: '35%' }} />
-                  <div className="bg-destructive flex-1" style={{ width: '25%' }} />
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Easy</span>
-                  <span>Medium</span>
-                  <span>Hard</span>
-                </div>
-              </div>
-              
-              <div className="space-y-2">
-                <span className="text-xs font-medium">Predicted Performance</span>
-                <div className="text-xs text-muted-foreground">
-                  <div>Average Score: 78%</div>
-                  <div>Completion Rate: 92%</div>
-                  <div>Time Usage: 85%</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Question Editor */}
           {selectedQuestion && (
@@ -422,7 +340,40 @@ const QuizBuilder = () => {
 
                       {(question.type === "multiple-choice" || question.type === "true-false") && (
                         <div className="space-y-2">
-                          <Label>Options</Label>
+                          <div className="flex items-center justify-between">
+                            <Label>Options</Label>
+                            {question.type === "multiple-choice" && (
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newOptions = [...(question.options || []), `Option ${(question.options?.length || 0) + 1}`];
+                                    updateQuestion(question.id, { options: newOptions });
+                                  }}
+                                  disabled={question.options && question.options.length >= 6}
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    const newOptions = question.options?.slice(0, -1) || [];
+                                    updateQuestion(question.id, { 
+                                      options: newOptions,
+                                      correctAnswer: typeof question.correctAnswer === 'number' && question.correctAnswer >= newOptions.length 
+                                        ? Math.max(0, newOptions.length - 1) 
+                                        : question.correctAnswer
+                                    });
+                                  }}
+                                  disabled={question.options && question.options.length <= 2}
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
                           {question.options?.map((option, i) => (
                             <div key={i} className="flex gap-2 items-center">
                               <Button
@@ -443,6 +394,11 @@ const QuizBuilder = () => {
                               />
                             </div>
                           ))}
+                          {question.type === "multiple-choice" && (
+                            <p className="text-xs text-muted-foreground">
+                              You can have 2-6 options. Click + to add or - to remove options.
+                            </p>
+                          )}
                         </div>
                       )}
 
