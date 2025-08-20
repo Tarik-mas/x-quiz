@@ -18,7 +18,7 @@ import {
 
 interface DashboardProps {
   userRole: "teacher" | "student" | "admin";
-  onNavigate: (view: "dashboard" | "quiz-builder" | "form-builder") => void;
+  onNavigate: (view: "dashboard" | "quiz-builder" | "form-builder" | "quiz-list") => void;
 }
 
 const Dashboard = ({ userRole, onNavigate }: DashboardProps) => {
@@ -169,20 +169,34 @@ const Dashboard = ({ userRole, onNavigate }: DashboardProps) => {
             )}
             {userRole === "student" && (
               <>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-2 h-12"
+                  onClick={() => onNavigate("quiz-list")}
+                >
+                  <ClipboardList className="w-4 h-4" />
+                  Available Quizzes
+                  <Badge className="ml-auto bg-primary text-primary-foreground">
+                    {(() => {
+                      const savedQuizzes = JSON.parse(localStorage.getItem('savedQuizzes') || '[]');
+                      return savedQuizzes.length;
+                    })()}
+                  </Badge>
+                </Button>
+                <Button variant="outline" className="w-full justify-start gap-2 h-12">
+                  <BarChart3 className="w-4 h-4" />
+                  My Results
+                  <Badge className="ml-auto bg-success">
+                    {(() => {
+                      const savedResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
+                      return savedResults.length;
+                    })()} Completed
+                  </Badge>
+                </Button>
                 <Button variant="outline" className="w-full justify-start gap-2 h-12">
                   <Clock className="w-4 h-4" />
                   View Pending Assignments
                   <Badge className="ml-auto bg-warning text-warning-foreground">3 Due</Badge>
-                </Button>
-                <Button variant="outline" className="w-full justify-start gap-2 h-12">
-                  <ClipboardList className="w-4 h-4" />
-                  Take Quiz
-                  <Badge className="ml-auto bg-primary text-primary-foreground">Available</Badge>
-                </Button>
-                <Button variant="outline" className="w-full justify-start gap-2 h-12">
-                  <BarChart3 className="w-4 h-4" />
-                  Check Progress
-                  <Badge className="ml-auto bg-success">87% Complete</Badge>
                 </Button>
               </>
             )}

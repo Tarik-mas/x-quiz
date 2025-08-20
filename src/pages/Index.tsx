@@ -3,17 +3,40 @@ import DashboardLayout from "@/components/DashboardLayout";
 import Dashboard from "@/components/Dashboard";
 import FormBuilder from "@/components/FormBuilder";
 import QuizBuilder from "@/components/QuizBuilder";
+import QuizList from "@/components/QuizList";
+import QuizTaker from "@/components/QuizTaker";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, GraduationCap, Settings } from "lucide-react";
 
-const Index = () => {
-  const [currentView, setCurrentView] = useState<"role-select" | "dashboard" | "form-builder" | "quiz-builder">("role-select");
-  const [userRole, setUserRole] = useState<"teacher" | "student" | "admin">("teacher");
+interface Quiz {
+  id: string;
+  title: string;
+  description: string;
+  timeLimit: number;
+  questions: any[];
+  adaptiveMode: boolean;
+  createdAt: string;
+}
 
-  const handleNavigate = (view: "dashboard" | "quiz-builder" | "form-builder") => {
+const Index = () => {
+  const [currentView, setCurrentView] = useState<"role-select" | "dashboard" | "form-builder" | "quiz-builder" | "quiz-list" | "quiz-taker">("role-select");
+  const [userRole, setUserRole] = useState<"teacher" | "student" | "admin">("teacher");
+  const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
+
+  const handleNavigate = (view: "dashboard" | "quiz-builder" | "form-builder" | "quiz-list") => {
     setCurrentView(view);
+  };
+
+  const handleStartQuiz = (quiz: Quiz) => {
+    setSelectedQuiz(quiz);
+    setCurrentView("quiz-taker");
+  };
+
+  const handleBackFromQuiz = () => {
+    setSelectedQuiz(null);
+    setCurrentView("quiz-list");
   };
 
   if (currentView === "role-select") {
@@ -117,6 +140,10 @@ const Index = () => {
         return <FormBuilder />;
       case "quiz-builder":
         return <QuizBuilder />;
+      case "quiz-list":
+        return <QuizList onBack={() => setCurrentView("dashboard")} onStartQuiz={handleStartQuiz} />;
+      case "quiz-taker":
+        return selectedQuiz ? <QuizTaker quiz={selectedQuiz} onBack={handleBackFromQuiz} /> : <Dashboard userRole={userRole} onNavigate={handleNavigate} />;
       default:
         return <Dashboard userRole={userRole} onNavigate={handleNavigate} />;
     }
@@ -146,6 +173,14 @@ const Index = () => {
               Quiz Builder
             </Button>
           </>
+        )}
+        {userRole === "student" && (
+          <Button
+            variant={currentView === "quiz-list" ? "default" : "ghost"}
+            onClick={() => setCurrentView("quiz-list")}
+          >
+            Available Quizzes
+          </Button>
         )}
         <Button
           variant="outline"
