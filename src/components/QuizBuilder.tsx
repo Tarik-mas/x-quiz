@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Plus, 
   Trash2, 
@@ -39,6 +41,8 @@ const QuizBuilder = () => {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [adaptiveMode, setAdaptiveMode] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const { toast } = useToast();
 
   const questionTypes = [
     { type: "multiple-choice", label: "Multiple Choice", icon: CheckCircle },
@@ -73,6 +77,57 @@ const QuizBuilder = () => {
     if (selectedQuestion === id) setSelectedQuestion(null);
   };
 
+  const saveQuiz = () => {
+    if (!quizTitle.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter a quiz title",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (questions.length === 0) {
+      toast({
+        title: "Error", 
+        description: "Please add at least one question",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const quizData = {
+      title: quizTitle,
+      description: quizDescription,
+      timeLimit: timeLimit[0],
+      questions,
+      adaptiveMode,
+      createdAt: new Date().toISOString(),
+    };
+
+    // Save to localStorage (in a real app, this would be saved to a database)
+    const savedQuizzes = JSON.parse(localStorage.getItem('savedQuizzes') || '[]');
+    savedQuizzes.push({ ...quizData, id: Date.now().toString() });
+    localStorage.setItem('savedQuizzes', JSON.stringify(savedQuizzes));
+
+    toast({
+      title: "Quiz Saved!",
+      description: `"${quizTitle}" has been saved successfully`,
+    });
+  };
+
+  const previewQuiz = () => {
+    if (questions.length === 0) {
+      toast({
+        title: "No questions to preview",
+        description: "Please add at least one question to preview the quiz",
+        variant: "destructive",
+      });
+      return;
+    }
+    setIsPreviewOpen(true);
+  };
+
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -94,11 +149,77 @@ const QuizBuilder = () => {
           <p className="text-muted-foreground">Create adaptive quizzes with AI-powered features</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
-            <Eye className="w-4 h-4 mr-2" />
-            Preview Quiz
-          </Button>
-          <Button className="bg-primary hover:bg-primary/90 shadow-glow">
+          <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" onClick={previewQuiz}>
+                <Eye className="w-4 h-4 mr-2" />
+                Preview Quiz
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{quizTitle}</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 p-4">
+                {quizDescription && (
+                  <p className="text-muted-foreground">{quizDescription}</p>
+                )}
+                <div className="flex gap-4 text-sm text-muted-foreground">
+                  <span>⏱️ Time Limit: {timeLimit[0]} minutes</span>
+                  <span>📝 {questions.length} questions</span>
+                  <span>🎯 {totalPoints} points total</span>
+                  {adaptiveMode && <span>🧠 Adaptive difficulty</span>}
+                </div>
+                
+                <div className="space-y-4">
+                  {questions.map((question, index) => (
+                    <Card key={question.id} className="p-4">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="font-medium">Question {index + 1}</h3>
+                        <div className="flex gap-2">
+                          <Badge variant="secondary">{question.difficulty}</Badge>
+                          <Badge variant="outline">{question.points} pts</Badge>
+                        </div>
+                      </div>
+                      <p className="mb-3">{question.question}</p>
+                      
+                      {question.options && (
+                        <div className="space-y-2">
+                          {question.options.map((option, i) => (
+                            <div key={i} className="flex items-center gap-2">
+                              <div className={`w-4 h-4 rounded-full border-2 ${
+                                question.correctAnswer === i 
+                                  ? 'bg-primary border-primary' 
+                                  : 'border-muted-foreground'
+                              }`} />
+                              <span className={question.correctAnswer === i ? 'font-medium' : ''}>
+                                {String.fromCharCode(65 + i)}. {option}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {question.type === "short-answer" && (
+                        <div className="mt-3 p-3 bg-muted rounded-lg">
+                          <Label className="text-xs text-muted-foreground">Sample Answer:</Label>
+                          <p className="text-sm">{question.correctAnswer}</p>
+                        </div>
+                      )}
+                      
+                      {question.explanation && (
+                        <div className="mt-3 p-3 bg-accent/10 rounded-lg">
+                          <Label className="text-xs text-muted-foreground">Explanation:</Label>
+                          <p className="text-sm">{question.explanation}</p>
+                        </div>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+          <Button onClick={saveQuiz} className="bg-primary hover:bg-primary/90 shadow-glow">
             <Save className="w-4 h-4 mr-2" />
             Save Quiz
           </Button>
