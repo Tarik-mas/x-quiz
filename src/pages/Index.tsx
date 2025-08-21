@@ -150,7 +150,7 @@ const Index = () => {
   };
 
   return (
-    <DashboardLayout userRole={userRole}>
+    <DashboardLayout userRole={userRole} onNavigate={handleNavigate}>
       <div className="flex items-center gap-4 mb-6">
         <Button
           variant={currentView === "dashboard" ? "default" : "ghost"}

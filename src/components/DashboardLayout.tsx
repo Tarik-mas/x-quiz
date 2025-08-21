@@ -18,31 +18,24 @@ import { cn } from "@/lib/utils";
 interface DashboardLayoutProps {
   children: React.ReactNode;
   userRole: "teacher" | "student" | "admin";
+  onNavigate?: (view: "dashboard" | "quiz-builder" | "form-builder" | "quiz-list") => void;
 }
 
-const DashboardLayout = ({ children, userRole }: DashboardLayoutProps) => {
+const DashboardLayout = ({ children, userRole, onNavigate }: DashboardLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const navigationItems = {
     teacher: [
-      { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-      { icon: FileText, label: "Form Builder", href: "/forms" },
-      { icon: ClipboardList, label: "Quiz Builder", href: "/quizzes" },
-      { icon: BarChart3, label: "Analytics", href: "/analytics" },
-      { icon: Users, label: "Students", href: "/students" },
+      { icon: LayoutDashboard, label: "Dashboard", action: "dashboard" },
+      { icon: FileText, label: "Form Builder", action: "form-builder" },
+      { icon: ClipboardList, label: "Quiz Builder", action: "quiz-builder" },
     ],
     student: [
-      { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-      { icon: BookOpen, label: "Assignments", href: "/assignments" },
-      { icon: ClipboardList, label: "Quizzes", href: "/quizzes" },
-      { icon: BarChart3, label: "Progress", href: "/progress" },
+      { icon: LayoutDashboard, label: "Dashboard", action: "dashboard" },
+      { icon: ClipboardList, label: "Available Quizzes", action: "quiz-list" },
     ],
     admin: [
-      { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
-      { icon: Users, label: "Users", href: "/users" },
-      { icon: GraduationCap, label: "Courses", href: "/courses" },
-      { icon: BarChart3, label: "Analytics", href: "/analytics" },
-      { icon: Settings, label: "Settings", href: "/settings" },
+      { icon: LayoutDashboard, label: "Dashboard", action: "dashboard" },
     ]
   };
 
@@ -81,9 +74,10 @@ const DashboardLayout = ({ children, userRole }: DashboardLayoutProps) => {
           <nav className="flex-1 p-4 space-y-2">
             {currentNav.map((item) => (
               <Button
-                key={item.href}
+                key={item.action}
                 variant="ghost"
                 className="w-full justify-start gap-3 h-11 hover:bg-primary-soft hover:text-primary"
+                onClick={() => onNavigate?.(item.action as any)}
               >
                 <item.icon className="w-4 h-4" />
                 {item.label}
