@@ -41,90 +41,114 @@ const Index = () => {
 
   if (currentView === "role-select") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background to-primary-soft flex items-center justify-center p-6">
-        <div className="max-w-2xl w-full">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-glow">
-              <GraduationCap className="w-8 h-8 text-primary-foreground" />
+      <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-8">
+        <div className="max-w-4xl w-full">
+          <div className="text-center mb-12 animate-fade-in-up">
+            <div className="w-20 h-20 bg-gradient-hero rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl animate-bounce-subtle">
+              <GraduationCap className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-foreground mb-2">Welcome to X-EdTech</h1>
-            <p className="text-xl text-muted-foreground">Choose your role to get started</p>
+            <h1 className="text-5xl font-bold gradient-text mb-4 tracking-tight">Welcome to QuizCraft</h1>
+            <p className="text-xl text-muted-foreground/80 max-w-2xl mx-auto leading-relaxed">
+              Choose your role to unlock the power of intelligent quiz creation and learning analytics
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card 
-              className="cursor-pointer transition-all duration-300 hover:shadow-elegant hover:scale-105 border-2 hover:border-primary shadow-card"
+              className="cursor-pointer transition-all duration-500 hover:shadow-2xl hover:scale-105 border-2 hover:border-primary/30 group animate-fade-in-up bg-gradient-card"
+              style={{ animationDelay: '0.1s' }}
               onClick={() => {
                 setUserRole("teacher");
                 setCurrentView("dashboard");
               }}
             >
-              <CardHeader className="text-center pb-4">
-                <div className="w-12 h-12 bg-primary-soft rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <GraduationCap className="w-6 h-6 text-primary" />
+              <CardHeader className="text-center pb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <GraduationCap className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-lg">Teacher</CardTitle>
-                <CardDescription>Create forms, quizzes, and manage students</CardDescription>
+                <CardTitle className="text-2xl gradient-text">Teacher</CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  Create forms, quizzes, and manage students with AI-powered insights
+                </CardDescription>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-2">
-                  <Badge variant="secondary" className="w-full justify-center">Form Builder</Badge>
-                  <Badge variant="secondary" className="w-full justify-center">Quiz Creator</Badge>
-                  <Badge variant="secondary" className="w-full justify-center">AI Insights</Badge>
-                </div>
+              <CardContent className="space-y-3">
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-primary-soft text-primary border-primary/20">
+                  Form Builder
+                </Badge>
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-secondary-soft text-secondary border-secondary/20">
+                  Quiz Creator
+                </Badge>
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-accent-soft text-accent border-accent/20">
+                  AI Insights
+                </Badge>
               </CardContent>
             </Card>
 
             <Card 
-              className="cursor-pointer transition-all duration-300 hover:shadow-elegant hover:scale-105 border-2 hover:border-secondary shadow-card"
+              className="cursor-pointer transition-all duration-500 hover:shadow-2xl hover:scale-105 border-2 hover:border-secondary/30 group animate-fade-in-up bg-gradient-card"
+              style={{ animationDelay: '0.2s' }}
               onClick={() => {
                 setUserRole("student");
                 setCurrentView("dashboard");
               }}
             >
-              <CardHeader className="text-center pb-4">
-                <div className="w-12 h-12 bg-secondary/20 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <Users className="w-6 h-6 text-secondary" />
+              <CardHeader className="text-center pb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-secondary/20 to-secondary/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-8 h-8 text-secondary" />
                 </div>
-                <CardTitle className="text-lg">Student</CardTitle>
-                <CardDescription>Take quizzes, submit assignments, track progress</CardDescription>
+                <CardTitle className="text-2xl gradient-text">Student</CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  Take quizzes, submit assignments, and track your learning progress
+                </CardDescription>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-2">
-                  <Badge variant="secondary" className="w-full justify-center">Assignments</Badge>
-                  <Badge variant="secondary" className="w-full justify-center">Quiz Taking</Badge>
-                  <Badge variant="secondary" className="w-full justify-center">Progress Tracking</Badge>
-                </div>
+              <CardContent className="space-y-3">
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-primary-soft text-primary border-primary/20">
+                  Assignments
+                </Badge>
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-secondary-soft text-secondary border-secondary/20">
+                  Quiz Taking
+                </Badge>
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-success-soft text-success border-success/20">
+                  Progress Tracking
+                </Badge>
               </CardContent>
             </Card>
 
             <Card 
-              className="cursor-pointer transition-all duration-300 hover:shadow-elegant hover:scale-105 border-2 hover:border-accent shadow-card"
+              className="cursor-pointer transition-all duration-500 hover:shadow-2xl hover:scale-105 border-2 hover:border-accent/30 group animate-fade-in-up bg-gradient-card"
+              style={{ animationDelay: '0.3s' }}
               onClick={() => {
                 setUserRole("admin");
                 setCurrentView("dashboard");
               }}
             >
-              <CardHeader className="text-center pb-4">
-                <div className="w-12 h-12 bg-accent/20 rounded-lg flex items-center justify-center mx-auto mb-3">
-                  <Settings className="w-6 h-6 text-accent" />
+              <CardHeader className="text-center pb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-accent/20 to-accent/30 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Settings className="w-8 h-8 text-accent" />
                 </div>
-                <CardTitle className="text-lg">Admin</CardTitle>
-                <CardDescription>Manage users, system settings, and analytics</CardDescription>
+                <CardTitle className="text-2xl gradient-text">Admin</CardTitle>
+                <CardDescription className="text-base leading-relaxed">
+                  Manage users, system settings, and comprehensive analytics
+                </CardDescription>
               </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-2">
-                  <Badge variant="secondary" className="w-full justify-center">User Management</Badge>
-                  <Badge variant="secondary" className="w-full justify-center">System Analytics</Badge>
-                  <Badge variant="secondary" className="w-full justify-center">Configuration</Badge>
-                </div>
+              <CardContent className="space-y-3">
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-primary-soft text-primary border-primary/20">
+                  User Management
+                </Badge>
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-accent-soft text-accent border-accent/20">
+                  System Analytics
+                </Badge>
+                <Badge variant="secondary" className="w-full justify-center py-2 text-sm bg-secondary-soft text-secondary border-secondary/20">
+                  Configuration
+                </Badge>
               </CardContent>
             </Card>
           </div>
 
-          <div className="text-center mt-8">
-            <p className="text-sm text-muted-foreground">
-              This is a demo version. All AI features are mocked for demonstration purposes.
+          <div className="text-center mt-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <p className="text-sm text-muted-foreground/70 max-w-md mx-auto leading-relaxed">
+              This is a premium demo showcasing modern educational technology. 
+              All AI features are simulated for demonstration purposes.
             </p>
           </div>
         </div>
@@ -151,24 +175,27 @@ const Index = () => {
 
   return (
     <DashboardLayout userRole={userRole} onNavigate={handleNavigate}>
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-8 p-1 bg-muted/30 rounded-2xl backdrop-blur-sm border border-border/50">
         <Button
-          variant={currentView === "dashboard" ? "default" : "ghost"}
+          variant={currentView === "dashboard" ? "premium" : "ghost"}
           onClick={() => setCurrentView("dashboard")}
+          className="rounded-xl"
         >
           Dashboard
         </Button>
         {userRole === "teacher" && (
           <>
             <Button
-              variant={currentView === "form-builder" ? "default" : "ghost"}
+              variant={currentView === "form-builder" ? "premium" : "ghost"}
               onClick={() => setCurrentView("form-builder")}
+              className="rounded-xl"
             >
               Form Builder
             </Button>
             <Button
-              variant={currentView === "quiz-builder" ? "default" : "ghost"}
+              variant={currentView === "quiz-builder" ? "premium" : "ghost"}
               onClick={() => setCurrentView("quiz-builder")}
+              className="rounded-xl"
             >
               Quiz Builder
             </Button>
@@ -176,8 +203,9 @@ const Index = () => {
         )}
         {userRole === "student" && (
           <Button
-            variant={currentView === "quiz-list" ? "default" : "ghost"}
+            variant={currentView === "quiz-list" ? "premium" : "ghost"}
             onClick={() => setCurrentView("quiz-list")}
+            className="rounded-xl"
           >
             Available Quizzes
           </Button>
@@ -185,7 +213,7 @@ const Index = () => {
         <Button
           variant="outline"
           onClick={() => setCurrentView("role-select")}
-          className="ml-auto"
+          className="ml-auto rounded-xl border-2 hover:border-primary/30 hover:bg-primary/5"
         >
           Switch Role
         </Button>
